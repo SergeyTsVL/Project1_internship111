@@ -10,15 +10,9 @@ def main():
 
     ticker = input("Введите тикер акции (например, «AAPL» для Apple Inc): ")
     period = input("Введите период для данных (например, '1mo' для одного месяца): ")
-    threshold = float(input("Установите максимальное пороговое значение цены закрытия: "))
-
-
 
     # Fetch stock data
     stock_data = dd.fetch_stock_data(ticker, period)
-
-    # Пороговые значения
-    dplt.notify_if_strong_fluctuations(stock_data, threshold)
 
     # Add moving average to the data
     stock_data = dd.add_moving_average(stock_data)
@@ -26,10 +20,7 @@ def main():
     # Plot the data
     dplt.create_and_save_plot(stock_data, ticker, period)
 
-    # Средняя цена закрытия
     dplt.calculate_and_display_average_price(data=stock_data)
-
-
 
 
 if __name__ == "__main__":
