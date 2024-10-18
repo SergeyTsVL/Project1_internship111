@@ -38,13 +38,13 @@ def create_and_save_plot(data, ticker, period, filename=None):
 def calculate_and_display_average_price(data):
 
     try:
-        a = data['Close'].values
+        a = data['Close'].values()
         period_prices = sum(a) / len(a)
         print(f'Cреднее значение колонки \'Close\' за период составляет: {period_prices}')
         logging.info(f"Среднее значение за период {period_prices}")
 
-    except:
-        logging.error(f"Произошла ошибка определения среднего значения за период!", exc_info=True)
+    except BaseException as err:
+        logging.error(f"Произошла ошибка {err} определения среднего значения за период!", exc_info=True)
         return 0
     # logging.basicConfig(level=logging.INFO, filemode="w", filename="main.log",
     #                     format="%(asktime)s | %(levelname)s | %(message)s")
