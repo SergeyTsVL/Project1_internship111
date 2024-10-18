@@ -36,12 +36,13 @@ def create_and_save_plot(data, ticker, period, filename=None):
 
 def calculate_and_display_average_price(data):
 
-    period_prices = sum(data['Close'].values) / len(data['Close'].values)
+    a = data['Close'].values
+    period_prices = sum(a) / len(a)
     print(f'Cреднее значение колонки \'Close\' за период составляет: {period_prices}')
 
 def notify_if_strong_fluctuations(data, threshold):
-
-    if float(max(data['Close'].values)) - float(min(data['Close'].values)) > threshold:
+    a = data['Close'].values
+    if float(max(a)) - float(min(a)) > threshold:
         print(Fore.RED + f"Превышено максимальное пороговое значения между максимальной и минимальной ценой закрытия!" + Fore.WHITE)
 
 
