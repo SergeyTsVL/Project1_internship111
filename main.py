@@ -1,3 +1,5 @@
+import logging
+
 import data_download as dd
 import data_plotting as dplt
 
@@ -33,4 +35,7 @@ def main():
 
 
 if __name__ == "__main__":
+
+    logging.basicConfig(level=logging.INFO, filemode="w", filename="main.log",
+                        format="%(asctime)s | %(levelname)s | %(message)s")
     main()

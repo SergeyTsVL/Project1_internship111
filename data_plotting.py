@@ -1,6 +1,7 @@
 from colorama import Fore
 import matplotlib.pyplot as plt
 import pandas as pd
+import logging
 
 
 def create_and_save_plot(data, ticker, period, filename=None):
@@ -36,9 +37,17 @@ def create_and_save_plot(data, ticker, period, filename=None):
 
 def calculate_and_display_average_price(data):
 
-    a = data['Close'].values
-    period_prices = sum(a) / len(a)
-    print(f'Cреднее значение колонки \'Close\' за период составляет: {period_prices}')
+    try:
+        a = data['Close'].values
+        period_prices = sum(a) / len(a)
+        print(f'Cреднее значение колонки \'Close\' за период составляет: {period_prices}')
+        logging.info(f"Среднее значение за период {period_prices}")
+
+    except:
+        logging.error(f"Произошла ошибка определения среднего значения за период!", exc_info=True)
+        return 0
+    # logging.basicConfig(level=logging.INFO, filemode="w", filename="main.log",
+    #                     format="%(asktime)s | %(levelname)s | %(message)s")
 
 def notify_if_strong_fluctuations(data, threshold):
     a = data['Close'].values
