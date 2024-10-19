@@ -54,5 +54,8 @@ def notify_if_strong_fluctuations(data, threshold):
     if float(max(a)) - float(min(a)) > threshold:
         print(Fore.RED + f"Превышено максимальное пороговое значения между максимальной и минимальной ценой закрытия!" + Fore.WHITE)
 
+def export_data_to_csv(data, filename):
 
+    df = pd.DataFrame(data)
+    df.to_csv(filename, sep=' ', index=False)
 

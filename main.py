@@ -1,5 +1,5 @@
 import logging
-
+from datetime import datetime
 import data_download as dd
 import data_plotting as dplt
 
@@ -14,6 +14,8 @@ def main():
     period = input("Введите период для данных (например, '1mo' для одного месяца): ")
     threshold = float(input("Установите максимальное пороговое значение цены закрытия: "))
 
+    now = datetime.now().strftime("%H.%M_%d.%m.%Y")
+    filename = f"{now}.csv"
 
 
     # Fetch stock data
@@ -30,6 +32,9 @@ def main():
 
     # Средняя цена закрытия
     dplt.calculate_and_display_average_price(data=stock_data)
+
+    # Вывод данных в CSV файл
+    dplt.export_data_to_csv(stock_data, filename)
 
 
 
