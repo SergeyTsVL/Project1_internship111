@@ -14,9 +14,10 @@ def main():
     period = input("Введите период для данных (например, '1mo' для одного месяца): ")
     threshold = float(input("Установите максимальное пороговое значение цены закрытия: "))
 
-    now = datetime.now().strftime("%H.%M_%d.%m.%Y")
-    filename = f"{now}.csv"
 
+    # Создаем csv файл с именем как дата и время создания
+    now = datetime.now().strftime("%H.%M.%S___%d.%m.%Y")
+    filename = f"{now}.csv"
 
     # Fetch stock data
     stock_data = dd.fetch_stock_data(ticker, period)
