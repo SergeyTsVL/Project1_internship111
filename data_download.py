@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import yfinance as yf
+from ta.momentum import RSIIndicator
+
 
 def fetch_stock_data(ticker, period='1mo'):
     """
@@ -22,3 +24,25 @@ def add_moving_average(data, window_size=5):
     """
     data['Moving_Average'] = data['Close'].rolling(window=window_size).mean()
     return data
+
+class Indicators():
+
+    def indicators_RSI(ticker, period='1mo'):
+
+        # Загружаем данные по акции
+        ticker = yf.Ticker(ticker)
+        data = ticker.history(period=period)
+
+        # Создаем объект RSI
+        rsi = RSIIndicator(data["Close"])
+
+        # Добавляем RSI к датафрейму
+        data["RSI"] = rsi.rsi()
+
+        RSI_indic = data["RSI"].values
+
+
+        # Отображаем результаты
+        print(RSI_indic)
+
+        return RSI_indic
