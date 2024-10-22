@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import yfinance as yf
 from ta.momentum import RSIIndicator
-
+import pandas as pd
+from ta.trend import MACD
+import ta
 
 def fetch_stock_data(ticker, period='1mo'):
     """
@@ -35,3 +37,28 @@ def indicators_RSI(ticker, period):
     data["RSI"] = rsi.rsi()              # Добавляем RSI к датафрейму
     RSI_indic = data["RSI"].values
     return RSI_indic
+
+
+
+
+# Функция для расчета MACD
+def indicators_MACD(ticker, period):
+    # Загружаем данные по акции
+    ticker = yf.Ticker(ticker)
+    data = ticker.history(period=period)
+
+    # Вычисляем EMA для короткого и длинного периодов
+    ema_short = data['Close'].ewm(span=12, adjust=False).mean()
+    ema_long = data['Close'].ewm(span=26, adjust=False).mean()
+
+    # Вычисляем MACD линию
+    macd_line = ema_short - ema_long
+
+    # Вычисляем сигнальную линию
+    signal_line = macd_line.ewm(span=9, adjust=False).mean()
+
+    # Добавляем результаты к датафрейму
+    data['MACD'] = macd_line
+    data['Signal Line'] = signal_line
+
+    return data

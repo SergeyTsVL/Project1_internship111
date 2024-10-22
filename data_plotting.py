@@ -10,15 +10,19 @@ from ta.momentum import RSIIndicator
 
 def create_and_save_plot(data, ticker, period, filename=None):
     plt.figure(figsize=(10, 6))
-    fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
 
     if 'Date' not in data:
         if pd.api.types.is_datetime64_any_dtype(data.index):
             dates = data.index.to_numpy()
-            ax1.plot(dates, data['Close'].values, label='Close Price')
+            ax1.plot(dates, data['Close'].values, label='Close Price', color='red')
             ax1.plot(dates, data['Moving_Average'].values, label='Moving Average')
 
             ax2.plot(dates, dd.indicators_RSI(ticker, period), label='Indicator RSI')
+
+            ax3.plot(data.index, dd.indicators_MACD(ticker, period)['MACD'].values, label='MACD', color='red')
+            ax3.plot(data.index, dd.indicators_MACD(ticker, period)['Signal Line'].values, label='Signal', color='green')
+
         else:
             print("Информация о дате отсутствует или не имеет распознаваемого формата.")
             return
@@ -27,19 +31,28 @@ def create_and_save_plot(data, ticker, period, filename=None):
             data['Date'] = pd.to_datetime(data['Date'])
         else:
             return None
-        ax1.plot(data['Date'], data['Close'], label='Close Price')
+        ax1.plot(data['Date'], data['Close'], label='Close Price', color='red')
         ax1.plot(data['Date'], data['Moving_Average'], label='Moving Average')
 
         ax2.plot(data['Date'], dd.indicators_RSI(ticker, period), label='Indicator RSI')
+
+        ax3.plot(data.index, dd.indicators_MACD(ticker, period)['MACD'].values, label="MACD", color='red')
+        ax3.plot(data.index, dd.indicators_MACD(ticker, period)['Signal Line'].values, label='Signal', color='green')
     ax1.set_title(label=f"{ticker} Цена акций с течением времени", loc="center")
     ax2.set_title(label="Индекс относительной силы(RSI)", loc="center")
+    ax3.set_title(label="Cхождение/расхождение скользящих средних(MACD)", loc="center")
+
     plt.xlabel("Дата")
     ax1.set_ylabel('Цена')
     ax2.set_ylabel('RSI')
+    ax3.set_ylabel('MACD')
     # ax1.plt.ylabel("Цена")
     # ax2.ylabel("//////")
 
     plt.legend()
+    ax1.grid(True)
+    ax2.grid(True)
+    ax3.grid(True)
     plt.tight_layout(pad=1.5, w_pad=1.0, h_pad=1.0)
     if filename is None:
         filename = f"{ticker}_{period}_stock_price_chart.png"
