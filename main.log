@@ -1,4 +1,4 @@
-2024-10-21 21:31:14,853 | ERROR | Произошла ошибка 'numpy.ndarray' object is not callable определения среднего значения за период!
+2024-10-22 09:25:43,057 | ERROR | Произошла ошибка 'numpy.ndarray' object is not callable определения среднего значения за период!
 Traceback (most recent call last):
   File "C:\Users\tsars\PycharmProjects\Project1_internship111\data_plotting.py", line 46, in calculate_and_display_average_price
     a = data['Close'].values()

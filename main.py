@@ -37,8 +37,8 @@ def main():
     # Вывод данных в CSV файл
     dplt.export_data_to_csv(stock_data, filename)
 
-    a = dd.Indicators()
-    a.indicators_RSI(ticker, period)
+
+    dd.indicators_RSI(ticker, period)
 
 
 

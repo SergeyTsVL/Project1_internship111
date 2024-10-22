@@ -25,24 +25,24 @@ def add_moving_average(data, window_size=5):
     data['Moving_Average'] = data['Close'].rolling(window=window_size).mean()
     return data
 
-class Indicators():
+# class Indicators():
 
-    def indicators_RSI(ticker, period='1mo'):
+def indicators_RSI(ticker, period):
 
-        # Загружаем данные по акции
-        ticker = yf.Ticker(ticker)
-        data = ticker.history(period=period)
+    # Загружаем данные по акции
+    ticker = yf.Ticker(ticker)
+    data = ticker.history(period=period)
 
-        # Создаем объект RSI
-        rsi = RSIIndicator(data["Close"])
+    # Создаем объект RSI
+    rsi = RSIIndicator(data["Close"])
 
-        # Добавляем RSI к датафрейму
-        data["RSI"] = rsi.rsi()
+    # Добавляем RSI к датафрейму
+    data["RSI"] = rsi.rsi()
 
-        RSI_indic = data["RSI"].values
+    RSI_indic = data["RSI"].values
 
 
-        # Отображаем результаты
-        print(RSI_indic)
+    # # Отображаем результаты
+    # print(RSI_indic)
 
-        return RSI_indic
+    return RSI_indic
