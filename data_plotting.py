@@ -31,8 +31,8 @@ def create_and_save_plot(data, ticker, period, filename=None):
         ax1.plot(data['Date'], data['Moving_Average'], label='Moving Average')
 
         ax2.plot(data['Date'], dd.indicators_RSI(ticker, period), label='Indicator RSI')
-    plt.title(label=f"{ticker} Цена акций с течением времени", loc="center")
-
+    ax1.set_title(label=f"{ticker} Цена акций с течением времени", loc="center")
+    ax2.set_title(label="Индекс относительной силы(RSI)", loc="center")
     plt.xlabel("Дата")
     ax1.set_ylabel('Цена')
     ax2.set_ylabel('RSI')
