@@ -11,7 +11,7 @@ from ta.momentum import RSIIndicator
 def create_and_save_plot(data, ticker, period, filename=None):
     plt.figure(figsize=(10, 6))
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
-    plt.title(f"{ticker} Цена акций с течением времени")
+
     if 'Date' not in data:
         if pd.api.types.is_datetime64_any_dtype(data.index):
             dates = data.index.to_numpy()
@@ -31,11 +31,12 @@ def create_and_save_plot(data, ticker, period, filename=None):
         ax1.plot(data['Date'], data['Moving_Average'], label='Moving Average')
 
         ax2.plot(data['Date'], dd.indicators_RSI(ticker, period), label='Indicator RSI')
+    plt.title(label=f"{ticker} Цена акций с течением времени", loc="center")
 
-
-
-    # plt.xlabel("Дата")
-    # ax1.ylabel("Цена")
+    plt.xlabel("Дата")
+    ax1.set_ylabel('Цена')
+    ax2.set_ylabel('RSI')
+    # ax1.plt.ylabel("Цена")
     # ax2.ylabel("//////")
 
     plt.legend()
