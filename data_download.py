@@ -3,14 +3,15 @@ import yfinance as yf
 from ta.momentum import RSIIndicator
 
 
-def fetch_stock_data(ticker, period='1mo'):
+def fetch_stock_data(ticker, period):
     """
     Метод определяет за какой период сделать выборку из "DataFrame" даных об акции, в "data" передает все данные по
     акциям. Допустимые периоды: 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max с начала года, максимум
     Допустимые интервалы: 1m,2m,5m,15m,30m,60m,90m,1h,1d,5d,1wk,1mo,3mo
+
     """
     stock = yf.Ticker(ticker)
-    data = stock.history(period=period)
+    data = stock.history(period)
     return data
 
 
