@@ -37,9 +37,8 @@ def main():
     # Вывод данных в CSV файл
     dplt.export_data_to_csv(stock_data, filename)
 
-
+    # Выводы индикаторов RSI и MACD
     dd.indicators_RSI(ticker, period)
-
     dd.indicators_MACD(ticker, period)
 
 if __name__ == "__main__":
