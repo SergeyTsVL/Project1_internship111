@@ -18,10 +18,10 @@ def create_and_save_plot(data, ticker, period, filename=None):
             ax1.plot(dates, data['Close'].values, label='Close Price', color='red')
             ax1.plot(dates, data['Moving_Average'].values, label='Moving Average')
             # Построение тренда индикатора RSI
-            ax2.plot(dates, dd.indicators_RSI(ticker, period), label='Indicator RSI')
+            ax2.plot(dates, dd.indicators_RSI(data), label='Indicator RSI')
             # Построение тренда индикатора MACD и линии сигнала
-            ax3.plot(data.index, dd.indicators_MACD(ticker, period)['MACD'].values, label='MACD', color='red')
-            ax3.plot(data.index, dd.indicators_MACD(ticker, period)['Signal Line'].values, label='Signal', color='green')
+            ax3.plot(data.index, dd.indicators_MACD(data)['MACD'].values, label='MACD', color='red')
+            ax3.plot(data.index, dd.indicators_MACD(data)['Signal Line'].values, label='Signal', color='green')
         else:
             print("Информация о дате отсутствует или не имеет распознаваемого формата.")
             return
@@ -33,10 +33,10 @@ def create_and_save_plot(data, ticker, period, filename=None):
         ax1.plot(data['Date'], data['Close'], label='Close Price', color='red')
         ax1.plot(data['Date'], data['Moving_Average'], label='Moving Average')
         # Построение тренда индикатора RSI
-        ax2.plot(data['Date'], dd.indicators_RSI(ticker, period), label='Indicator RSI')
+        ax2.plot(data['Date'], dd.indicators_RSI(data), label='Indicator RSI')
         # Построение тренда индикатора MACD и линии сигнала
-        ax3.plot(data.index, dd.indicators_MACD(ticker, period)['MACD'].values, label="MACD", color='red')
-        ax3.plot(data.index, dd.indicators_MACD(ticker, period)['Signal Line'].values, label='Signal', color='green')
+        ax3.plot(data.index, dd.indicators_MACD(data)['MACD'].values, label="MACD", color='red')
+        ax3.plot(data.index, dd.indicators_MACD(data)['Signal Line'].values, label='Signal', color='green')
     ax1.set_title(label=f"{ticker} Цена акций с течением времени", loc="center")
     ax2.set_title(label="Индекс относительной силы(RSI)", loc="center")
     ax3.set_title(label="Cхождение/расхождение скользящих средних(MACD)", loc="center")
@@ -74,6 +74,7 @@ def calculate_and_display_average_price(data):
 
 
 def notify_if_strong_fluctuations(data, threshold):
+
     a = data['Close'].values
     if float(max(a)) - float(min(a)) > threshold:
         print(Fore.RED + f"Превышено максимальное пороговое значения между максимальной и минимальной ценой закрытия!"
