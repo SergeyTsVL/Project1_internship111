@@ -58,7 +58,6 @@ def main():
     dd.indicators_RSI(data)
     dd.indicators_MACD(data)
 
-
 if __name__ == "__main__":
 
     logging.basicConfig(level=logging.INFO, filemode="w", filename="main.log",
