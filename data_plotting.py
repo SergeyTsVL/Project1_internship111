@@ -5,13 +5,14 @@ import logging
 from colorama import Fore
 import data_download as dd
 
-import main as mn
-from ta.momentum import RSIIndicator
 
-def create_and_save_plot(data, ticker, period, filename=None):
+def create_and_save_plot(data, ticker, period, filename=None, style_use=None):
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(20, 12))
+    # Добавляем слили к таблицам
+    plt.style.use(style_use)
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
+    plt.subplots_adjust(wspace=0.3, hspace=0.3) # Растояние между графиками, чтобы названия залазили на графики
     if 'Date' not in data:
         if pd.api.types.is_datetime64_any_dtype(data.index):
             dates = data.index.to_numpy()

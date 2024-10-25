@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import yfinance as yf
 from ta.momentum import RSIIndicator
 
 
@@ -29,8 +28,6 @@ def indicators_RSI(data):
     """
     Метод возвращает data["RSI"].values для дальнейшей обработки и визуализации тренда индикатора RSI.
     """
-    # ticker = yf.Ticker(ticker)           # Загружаем данные по акции
-    # data = ticker.history(period=period)
     rsi = RSIIndicator(data["Close"])    # Создаем объект RSI
     data["RSI"] = rsi.rsi()              # Добавляем RSI к датафрейму
     RSI_indic = data["RSI"].values
@@ -43,10 +40,6 @@ def indicators_MACD(data):
     Метод возвращает data["RSI"].values для дальнейшей обработки и визуализации тренда индикатора MACD и
     сигнальную линию.
     """
-    # Загружаем данные по акции
-    # ticker = yf.Ticker(ticker)
-    # data = ticker.history(period=period)
-    # Вычисляем EMA для короткого и длинного периодов
     ema_short = data['Close'].ewm(span=12, adjust=False).mean()
     ema_long = data['Close'].ewm(span=26, adjust=False).mean()
     # Вычисляем MACD линию

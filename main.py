@@ -14,15 +14,15 @@ def main():
     print("Общие периоды времени для данных о запасах включают: 1д, 5д, 1мес, 3мес, 6мес, 1г, 2г, 5г, 10л, "
           "с начала года, макс.")
 
-    ticker = input("Введите тикер акции, (по умолчанию AAPL): ") or 'AAPL'
-    period = input("Введите период для данных, (по умолчанию False и переход на задание периода вручную): ") or False
+    ticker = input("Введите тикер акции (по умолчанию AAPL): ") or 'AAPL'
+    period = input("Введите период для данных (по умолчанию False и переход на задание периода вручную): ") or False
     period = period if period != False else None
     stock = yf.Ticker(ticker)
     data = stock.history(period)
 
     if period == None:
-        start = input("Введите дату начала периода в формате ГГГГ-ДД-ММ, (по умолчанию 2022-01-03): ") or '2022-01-03'
-        end = input("Введите дату окончания периода в формате ГГГГ-ДД-ММ, (по умолчанию 2022-01-10): ") or '2023-01-10'
+        start = input("Введите дату начала периода в формате ГГГГ-ДД-ММ (по умолчанию 2022-01-03): ") or '2022-01-03'
+        end = input("Введите дату окончания периода в формате ГГГГ-ДД-ММ (по умолчанию 2022-01-10): ") or '2023-01-10'
         interval = input("Введите интервал, например, 1s, 1m, 1h, 1d, 1wk, 1mo (по умолчанию 1d): ") or '1d'
         period = f'{start}_&_{end}'
         stock = yf.Ticker(ticker)
@@ -31,7 +31,8 @@ def main():
         period = period
 
     threshold = float(input("Установите максимальное пороговое значение цены закрытияб (по умолчанию 20): ") or 20)
-
+    style_use = input("Выберите стиль оформления графиков (по стиль умолчанию _classic_test_patch): ") or ('_classic_'
+                                                                                                           'test_patch')
     # Fetch stock data
     stock_data = dd.fetch_stock_data(data)
 
@@ -46,7 +47,7 @@ def main():
     stock_data = dd.add_moving_average(stock_data)
 
     # Plot the data
-    dplt.create_and_save_plot(stock_data, ticker, period)
+    dplt.create_and_save_plot(stock_data, ticker, period, style_use=style_use)
 
     # Средняя цена закрытия
     dplt.calculate_and_display_average_price(data=stock_data)
