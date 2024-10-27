@@ -15,7 +15,8 @@ def main():
           "с начала года, макс.")
 
     ticker = input("Введите тикер акции (по умолчанию AAPL): ") or 'AAPL'
-    period = input("Введите период для данных (по умолчанию False и переход на задание периода вручную): ") or False
+    period = input("Введите период для данных (например 1y), (по умолчанию False и переход на задание периода "
+                   "вручную): ") or False
     period = period if period != False else None
     stock = yf.Ticker(ticker)
     data = stock.history(period)
