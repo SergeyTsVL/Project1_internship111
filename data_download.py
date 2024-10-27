@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from ta.momentum import RSIIndicator
+import statistics
+import numpy as np
+import pandas as pd
 
 
 def fetch_stock_data(data):
@@ -50,3 +53,12 @@ def indicators_MACD(data):
     data['MACD'] = macd_line
     data['Signal Line'] = signal_line
     return data
+
+def standard_deviation(data):
+
+    df = pd.DataFrame(data)
+    print(df)
+    df['Std_Dev'] = df['Close'].rolling(window=7).std()
+    print(df['Std_Dev'])
+    return data
+
