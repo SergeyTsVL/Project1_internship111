@@ -56,7 +56,6 @@ def indicators_MACD(data):
 
 def standard_deviation(data):
 
-    df = pd.DataFrame(data)
-    df['Std_Dev'] = df['Close'].rolling(window=7).std()
+    data['Std_Dev'] = data['Close'].rolling(window=7).std()
     return data
 

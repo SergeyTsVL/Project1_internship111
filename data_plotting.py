@@ -24,7 +24,7 @@ def create_and_save_plot(data, ticker, period, filename=None, style_use=None):
             ax3.plot(data.index, dd.indicators_MACD(data)['MACD'].values, label='MACD', color='red')
             ax3.plot(data.index, dd.indicators_MACD(data)['Signal Line'].values, label='Signal', color='green')
             # standard_deviation(data)
-            ax4.plot(data.index, dd.standard_deviation(data), label='Std_Dev', color='green')
+            ax4.plot(data.index, dd.standard_deviation(data)['Std_Dev'].values, label='Std_Dev', color='green')
         else:
             print("Информация о дате отсутствует или не имеет распознаваемого формата.")
             return
@@ -41,11 +41,11 @@ def create_and_save_plot(data, ticker, period, filename=None, style_use=None):
         ax3.plot(data.index, dd.indicators_MACD(data)['MACD'].values, label="MACD", color='red')
         ax3.plot(data.index, dd.indicators_MACD(data)['Signal Line'].values, label='Signal', color='green')
 
-        ax4.plot(data.index, dd.standard_deviation(data), label='Std_Dev', color='blue')
+        ax4.plot(data.index, dd.standard_deviation(data)['Std_Dev'].values, label='Std_Dev', color='blue')
+
     ax1.set_title(label=f"{ticker} Цена акций с течением времени", loc="center")
     ax2.set_title(label="Индекс относительной силы(RSI)", loc="center")
     ax3.set_title(label="Cхождение/расхождение скользящих средних(MACD)", loc="center")
-
     ax4.set_title(label="Стандартное отклонения цены закрытия", loc="center")
     # Подписываем общую ось "х"
     plt.xlabel("Дата")
@@ -58,12 +58,13 @@ def create_and_save_plot(data, ticker, period, filename=None, style_use=None):
     ax1.legend()
     # ax2.legend()
     ax3.legend()
-    # ax4.legend()
+    ax4.legend()
     # Добавляем сетку, для удобства определения значений
     ax1.grid(True)
     ax2.grid(True)
     ax3.grid(True)
     ax4.grid(True)
+    # ax4.set_ylim([-10, 10])
     if filename is None:
         filename = f"{ticker}_{period}_stock_price_chart.png"
     else:
