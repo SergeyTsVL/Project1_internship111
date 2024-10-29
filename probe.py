@@ -39,13 +39,37 @@
 # plt.show()
 
 # *****************************************************************
-nums = [2,7,11,15]
-target = 9
-# for i in len(nums):
+# nums = [2,6, 7,11,15]
+# # print(nums[0])
+# # print(len(nums))
+# target = 9
+# for i in range(len(nums)):
 #     s = nums[0] + nums[i]
 #     if s == target:
 #         print(i)
-for i in len(nums):
-    print(nums[i])
+# # for i in range(len(nums)):
+# #
+# #     print(nums[i])
+
+import plotly.graph_objects as go
+
+# Данные для графика
+x = [1, 2, 3, 4, 5]
+y = [10, 20, 25, 30, 40]
+
+# Создание графика
+fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers'))
+
+# Добавление заголовка и подписей осей
+fig.update_layout(title='Интерактивный график',
+                  xaxis_title='Ось X',
+                  yaxis_title='Ось Y')
+
+# Отображение графика
+fig.show()
+
+
+
+
 
 
