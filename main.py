@@ -5,8 +5,6 @@ import data_plotting as dplt
 import yfinance as yf
 
 
-
-
 def main():
     print("Добро пожаловать в инструмент получения и построения графиков биржевых данных.")
     print("Вот несколько примеров биржевых тикеров, которые вы можете рассмотреть: AAPL (Apple Inc), "
