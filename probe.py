@@ -51,25 +51,60 @@
 # #
 # #     print(nums[i])
 
+# import plotly.graph_objects as go
+#
+# # Данные для графика
+# x = [1, 2, 3, 4, 5]
+# y = [10, 20, 25, 30, 40]
+#
+# # Создание графика
+# fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers'))
+#
+# # Добавление заголовка и подписей осей
+# fig.update_layout(title='Интерактивный график',
+#                   xaxis_title='Ось X',
+#                   yaxis_title='Ось Y')
+#
+# # Отображение графика
+# fig.show()
+
+
+
+# from bokeh.plotting import figure, show
+#
+# # data preparation
+# x_coords = list(range(11))
+# y0_coords = x_coords
+# y1_coords = [10 - i for i in x_coords]
+# y2_coords = [abs(i - 5) for i in x_coords]
+#
+# #  single renderer with three different plots
+# first_plot = figure(plot_width=250, plot_height=250, background_fill_color="#fafafa")
+# first_plot.circle(x_coords, y0_coords, size=12, color="#0000FF", alpha=0.8)
+#
+# second_plot = figure(plot_width=250, plot_height=250, background_fill_color="#fafafa")
+# second_plot.triangle(x_coords, y1_coords, size=12, color="#00FF7F", alpha=0.8)
+#
+# third_plot = figure(plot_width=250, plot_height=250, background_fill_color="#fafafa")
+# third_plot .square(x_coords, y2_coords, size=12, color="#FFFF00", alpha=0.8)
+#
+# #  placement of results in the same row automatically adjusts in line with browser window's width
+# show(row(children=[first_plot, second_plot, third_plot ], sizing_mode="scale_width"))
+
+
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
-# Данные для графика
-x = [1, 2, 3, 4, 5]
-y = [10, 20, 25, 30, 40]
+fig = make_subplots(rows=2, cols=1,
+                    shared_xaxes=True,
+                    vertical_spacing=0.03,
+                    subplot_titles=("График 1", "График 2"))
 
-# Создание графика
-fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers'))
+fig.add_trace(go.Scatter(x=[1, 2, 3], y=[2, 5, 7]), row=1, col=1)
+fig.add_trace(go.Bar(x=[1, 2, 3], y=[10, 15, 13]), row=2, col=1)
 
-# Добавление заголовка и подписей осей
-fig.update_layout(title='Интерактивный график',
-                  xaxis_title='Ось X',
-                  yaxis_title='Ось Y')
-
-# Отображение графика
+fig.update_layout(height=600, width=800)
 fig.show()
-
-
-
 
 
 

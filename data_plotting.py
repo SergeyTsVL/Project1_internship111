@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
 import logging
 from colorama import Fore
 import data_download as dd
@@ -96,4 +99,27 @@ def export_data_to_csv(data, filename):
 
     df = pd.DataFrame(data)
     df.to_csv(f'CSV_file/{filename}', sep=',', index=False)
+
+def interactive_platform(data, ticker):
+
+    fig = make_subplots(rows=4, cols=1,
+                        shared_xaxes=True,
+                        vertical_spacing=0.03,
+                        subplot_titles=(f"{ticker} Цена акции с течением времени",
+                                        f'Индекс относительной силы(RSI)',
+                                        f'Cхождение/расхождение скользящих средних(MACD)',
+                                        f'Стандартное отклонения цены закрытия',))
+    fig.add_trace(go.Scatter(x=data.index.to_numpy(), y=data['Close'].values, name='Close Price'), row=1, col=1)
+    fig.add_trace(go.Scatter(x=data.index.to_numpy(), y=data['Moving_Average'].values, name='Moving Average'), row=1,
+                  col=1)
+    fig.add_trace(go.Scatter(x=data.index.to_numpy(), y=dd.indicators_RSI(data), name='Indicator RSI'), row=2, col=1)
+    fig.add_trace(go.Scatter(x=data.index.to_numpy(), y=dd.indicators_MACD(data)['MACD'].values, name='MACD'), row=3,
+                  col=1)
+    fig.add_trace(go.Scatter(x=data.index.to_numpy(), y=dd.indicators_MACD(data)['Signal Line'].values, name='Signal'),
+                  row=3, col=1)
+    fig.add_trace(go.Scatter(x=data.index.to_numpy(), y=dd.standard_deviation(data)['Std_Dev'].values, name='Std_Dev'),
+                  row=4, col=1)
+
+    fig.update_layout(height=750, width=900)
+    fig.show()
 

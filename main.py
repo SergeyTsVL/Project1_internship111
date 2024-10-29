@@ -60,6 +60,8 @@ def main():
 
     dd.standard_deviation(data)
 
+    dplt.interactive_platform(data, ticker)
+
 if __name__ == "__main__":
 
     logging.basicConfig(level=logging.INFO, filemode="w", filename="main.log",
