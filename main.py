@@ -29,7 +29,7 @@ def main():
     else:
         period = period
 
-    threshold = float(input("Установите максимальное пороговое значение цены закрытияб (по умолчанию 20): ") or 20)
+    threshold = float(input("Установите максимальное пороговое значение цены закрытия (по умолчанию 20): ") or 20)
     style_use = input("Выберите стиль оформления графиков (по стиль умолчанию _classic_test_patch): ") or ('_classic_'
                                                                                                            'test_patch')
     # Fetch stock data
