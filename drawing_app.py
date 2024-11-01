@@ -2,7 +2,7 @@
 import tkinter as tk
 from tkinter import colorchooser, filedialog, messagebox
 from PIL import Image, ImageDraw
-
+# from tkinter import *
 
 class DrawingApp:
     def __init__(self, root):
@@ -38,29 +38,23 @@ class DrawingApp:
         save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)
         save_button.pack(side=tk.LEFT)
 
-        self.brush_size_scale = tk.Scale(control_frame, from_=1, to=10, orient=tk.HORIZONTAL)
-        self.brush_size_scale.pack(side=tk.LEFT)
-
-        # # Создание списка опций
-        # options_list = [x for x in range(1, 11)]
-        #
-        # # Переменная для отслеживания выбранного варианта в OptionMenu
-        # value_inside = tk.StringVar(self.root)
-        #
-        # # # Установка значения по умолчанию для переменной
-        # value_inside.set(5)
-        #
-        # # Создание виджета OptionMenu и передача ему созданного списка опций и переменной
-        # self.brush_size_scale = tk.OptionMenu(control_frame, value_inside, *options_list)
-        # self.brush_size_scale.pack(side=tk.LEFT)
+        # # Создание списка значений толщины
+        options_list = [x for x in range(1, 11)]
+        # Переменная для отслеживания выбранного варианта в OptionMenu
+        self.value_inside = tk.StringVar()
+        # Установка значения по умолчанию для переменной
+        self.value_inside.set(options_list[0])
+        # Создание виджета OptionMenu и передача ему созданного списка опций и переменной
+        brush_size_scale = tk.OptionMenu(control_frame, self.value_inside, *options_list)
+        brush_size_scale.pack(side=tk.LEFT)
 
     def paint(self, event):
         if self.last_x and self.last_y:
             self.canvas.create_line(self.last_x, self.last_y, event.x, event.y,
-                                    width=self.brush_size_scale.get(), fill=self.pen_color,
+                                    width=int(self.value_inside.get()), fill=self.pen_color,  # Необходимо было поставить int(
                                     capstyle=tk.ROUND, smooth=tk.TRUE)
             self.draw.line([self.last_x, self.last_y, event.x, event.y], fill=self.pen_color,
-                           width=self.brush_size_scale.get())
+                           width=int(self.value_inside.get()))   # Необходимо было поставить int(
 
         self.last_x = event.x
         self.last_y = event.y
