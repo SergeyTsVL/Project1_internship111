@@ -4,6 +4,10 @@ from tkinter import colorchooser, filedialog, messagebox
 from PIL import Image, ImageDraw
 # from tkinter import *
 
+
+clicks = 0
+l = []
+
 class DrawingApp:
     def __init__(self, root):
         self.root = root
@@ -38,6 +42,9 @@ class DrawingApp:
         save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)
         save_button.pack(side=tk.LEFT)
 
+        eraser_button = tk.Button(control_frame, text="Ластик", command=self.choose_color_eraser)
+        eraser_button.pack(side=tk.LEFT)
+
         # # Создание списка значений толщины
         options_list = [x for x in range(1, 11)]
         # Переменная для отслеживания выбранного варианта в OptionMenu
@@ -69,6 +76,21 @@ class DrawingApp:
 
     def choose_color(self):
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
+        l.append(self.pen_color)
+
+    def choose_color_eraser(self):   # рализация работы ластика через список, при этом чтобы список постоянно сокращаем
+        global clicks
+        clicks += 1
+        if (clicks - 1) % 2 == 0:
+            l.append(self.pen_color)
+            self.pen_color = "white"
+            if len(l) > 3:
+                del l[0]
+        else:
+            self.pen_color = l[-1]
+            if len(l) > 3:
+                del l[0]
+
 
     def save_image(self):
         file_path = filedialog.asksaveasfilename(filetypes=[('PNG files', '*.png')])
