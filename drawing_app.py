@@ -5,8 +5,8 @@ from PIL import Image, ImageDraw
 # from tkinter import *
 
 
-clicks = 0
-l = []
+ACTIVATION_CONTROL = 0
+LIST_ACTIVATION_CONTROL=[]
 
 class DrawingApp:
     def __init__(self, root):
@@ -58,9 +58,13 @@ class DrawingApp:
     def paint(self, event):
         if self.last_x and self.last_y:
             self.canvas.create_line(self.last_x, self.last_y, event.x, event.y,
-                                    width=int(self.value_inside.get()), fill=self.pen_color,  # Необходимо было поставить int(
+                                    width=int(self.value_inside.get()), fill=self.pen_color or
+                                    LIST_ACTIVATION_CONTROL[-1], # Если self.pen_color будет None то цвет будет
+                                    # последним элементом списка
                                     capstyle=tk.ROUND, smooth=tk.TRUE)
-            self.draw.line([self.last_x, self.last_y, event.x, event.y], fill=self.pen_color,
+            self.draw.line([self.last_x, self.last_y, event.x, event.y], fill=self.pen_color or
+                           LIST_ACTIVATION_CONTROL[-1],  # Если self.pen_color будет None то цвет будет
+                                    # последним элементом списка
                            width=int(self.value_inside.get()))   # Необходимо было поставить int(
 
         self.last_x = event.x
@@ -76,20 +80,34 @@ class DrawingApp:
 
     def choose_color(self):
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
-        l.append(self.pen_color)
+        # Корректируем счетчик таким
+        global ACTIVATION_CONTROL
+        if self.pen_color != None:
+            print("!= None")
+            LIST_ACTIVATION_CONTROL.append(self.pen_color)
+            ACTIVATION_CONTROL += 1
+        else:
+            None
+
 
     def choose_color_eraser(self):   # рализация работы ластика через список, при этом чтобы список постоянно сокращаем
-        global clicks
-        clicks += 1
-        if (clicks - 1) % 2 == 0:
-            l.append(self.pen_color)
+        global ACTIVATION_CONTROL
+        # Реализация акивности и неактивности действия ластика, каждое четное нажатие включает ластик, нечетное - отключ
+        if ACTIVATION_CONTROL % 2 == 0:
+            # Ластик включается переводом self.pen_color на белый цвет
+            if self.pen_color != None:
+                try:
+                    if LIST_ACTIVATION_CONTROL[-1] != self.pen_color:
+                        LIST_ACTIVATION_CONTROL.append(self.pen_color)
+                except:
+                    self.pen_color = "white"
             self.pen_color = "white"
-            if len(l) > 3:
-                del l[0]
         else:
-            self.pen_color = l[-1]
-            if len(l) > 3:
-                del l[0]
+            try:
+                self.pen_color = LIST_ACTIVATION_CONTROL[-1]
+            except:
+                self.pen_color = 'black'
+        ACTIVATION_CONTROL += 1
 
 
     def save_image(self):
