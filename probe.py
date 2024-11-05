@@ -12,7 +12,7 @@ class ColorPickerApp:
     def pick_color(self, event):
         x = event.x
         y = event.y
-        color = self.canvas.cget('bg')  # Получаем цвет фона холста
+        color = self.canvas.cget('bg')  # Получаем цвет фона холста getpixel((x, self.pen_color))
         print(f"Выбрано цвет: {color}")
 
 root = tk.Tk()

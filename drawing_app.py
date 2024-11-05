@@ -45,8 +45,8 @@ class DrawingApp:
         eraser_button = tk.Button(control_frame, text="Ластик", command=self.choose_color_eraser)
         eraser_button.pack(side=tk.LEFT)
 
-        # pipette_button =
-        self.canvas.bind('<Button-3>', self.pick_color)
+        # # pipette_button =
+        # self.canvas.bind('<Button-3>', self.pick_color)
 
         # Создание списка значений толщины
         options_list = [x for x in range(1, 11)]
@@ -81,8 +81,8 @@ class DrawingApp:
         self.image = Image.new("RGB", (600, 400), "white")
         self.draw = ImageDraw.Draw(self.image)
 
-    def pick_color(self):
-        self.image.getpixel((x, self.pen_color))
+    # def pick_color(self):
+    #     self.image.getpixel((x, self.pen_color))
     def choose_color(self):
         """
         В методе используем ACTIVATION_CONTROL как счетчик кликов на кнопку 'Ластик', а LIST_ACTIVATION_CONTROL
