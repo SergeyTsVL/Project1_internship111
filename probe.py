@@ -1,31 +1,20 @@
-import tkinter
+import tkinter as tk
 
-# Создание окна по умолчанию
-root = tkinter.Tk()
-root.title("Welcome to GeeksForGeeks")
-root.geometry('700x500')
+class ColorPickerApp:
+    def __init__(self, master):
+        self.master = master
+        self.canvas = tk.Canvas(self.master, width=400, height=300)
+        self.canvas.pack()
 
-# Создание списка опций
-options_list = ["Option 1", "Option 2", "Option 3", "Option 4"]
+        # Связываем правую кнопку мыши с методом pick_color
+        self.canvas.bind('<Button-3>', self.pick_color)
 
-# Переменная для отслеживания выбранного варианта в OptionMenu
-value_inside = tkinter.StringVar(root)
+    def pick_color(self, event):
+        x = event.x
+        y = event.y
+        color = self.canvas.cget('bg')  # Получаем цвет фона холста
+        print(f"Выбрано цвет: {color}")
 
-# Установка значения по умолчанию для переменной
-value_inside.set("Select an Option")
-
-# Создание виджета OptionMenu и передача ему созданного списка опций и переменной
-question_menu = tkinter.OptionMenu(root, value_inside, *options_list)
-question_menu.pack()
-
-# Функция для печати отправленного варианта
-def print_answers():
-    print("Selected Option: {}".format(value_inside.get()))
-    return None
-
-# Кнопка отправки
-submit_button = tkinter.Button(root, text='Submit', command=print_answers)
-submit_button.pack()
+root = tk.Tk()
+app = ColorPickerApp(root)
 root.mainloop()
-
-

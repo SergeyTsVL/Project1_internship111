@@ -45,7 +45,10 @@ class DrawingApp:
         eraser_button = tk.Button(control_frame, text="Ластик", command=self.choose_color_eraser)
         eraser_button.pack(side=tk.LEFT)
 
-        # # Создание списка значений толщины
+        # pipette_button =
+        self.canvas.bind('<Button-3>', self.pick_color)
+
+        # Создание списка значений толщины
         options_list = [x for x in range(1, 11)]
         # Переменная для отслеживания выбранного варианта в OptionMenu
         self.value_inside = tk.StringVar()
@@ -78,6 +81,8 @@ class DrawingApp:
         self.image = Image.new("RGB", (600, 400), "white")
         self.draw = ImageDraw.Draw(self.image)
 
+    def pick_color(self):
+        self.image.getpixel((x, self.pen_color))
     def choose_color(self):
         """
         В методе используем ACTIVATION_CONTROL как счетчик кликов на кнопку 'Ластик', а LIST_ACTIVATION_CONTROL
@@ -97,7 +102,7 @@ class DrawingApp:
         """
         В методе используем ACTIVATION_CONTROL как счетчик кликов на кнопку 'Ластик', а LIST_ACTIVATION_CONTROL
         используем как накопитель данных для запоминания какой цвет был последним.
-        Конструкция if self.pen_color != None: определяет что если при переходе в меню выбора цвета, не произошел выбор
+        Конструкция if self.pen_color != None: определяет, что если при переходе в меню выбора цвета, не произошел выбор
         цвета то мы сохраняем в LIST_ACTIVATION_CONTROL последний выбранный цвет self.pen_color, иначе в список будет
         внесен None и придется перевыбирать цвет.
         При нажатии кнопки 'Ластик' происхоит смена цвета на "white", либо смена "white" на последний использованный
