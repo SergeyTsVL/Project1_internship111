@@ -59,7 +59,8 @@ class DrawingApp:
 
     def pick_color(self, event):
         """
-
+        Функция определяет цвет в месте указания курсора и принимает этот цвет для дальнейшей отрисовке, при этом цвет
+        формата RGB переводится в шестнадцатеричный код цвета.
         :param event:
         :return:
         """
@@ -83,7 +84,6 @@ class DrawingApp:
                                     LIST_ACTIVATION_CONTROL[-1],  # Если self.pen_color будет None, то цвет будет
                                     # последним элементом списка
                                     width=int(self.value_inside.get()))   # Необходимо было поставить int(
-
         self.last_x = event.x
         self.last_y = event.y
 
@@ -94,8 +94,6 @@ class DrawingApp:
         self.canvas.delete("all")
         self.image = Image.new("RGB", (600, 400), "white")
         self.draw = ImageDraw.Draw(self.image)
-
-
 
 
     def choose_color(self):
@@ -143,7 +141,6 @@ class DrawingApp:
             except:
                 self.pen_color = 'black'
         ACTIVATION_CONTROL += 1
-        print(LIST_ACTIVATION_CONTROL[-1])
 
 
     def save_image(self):
