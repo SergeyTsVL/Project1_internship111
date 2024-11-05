@@ -27,6 +27,8 @@ class DrawingApp:
         self.canvas.bind('<B1-Motion>', self.paint)
         self.canvas.bind('<ButtonRelease-1>', self.reset)
 
+        self.canvas.bind('<Button-3>', self.pick_color)
+
 
     def setup_ui(self):
 
@@ -45,11 +47,8 @@ class DrawingApp:
         eraser_button = tk.Button(control_frame, text="Ластик", command=self.choose_color_eraser)
         eraser_button.pack(side=tk.LEFT)
 
-        # # pipette_button =
-        # self.canvas.bind('<Button-3>', self.pick_color)
-
         # Создание списка значений толщины
-        options_list = [x for x in range(1, 11)]
+        options_list = [x for x in range(1, 21)]
         # Переменная для отслеживания выбранного варианта в OptionMenu
         self.value_inside = tk.StringVar()
         # Установка значения по умолчанию для переменной
@@ -58,17 +57,32 @@ class DrawingApp:
         brush_size_scale = tk.OptionMenu(control_frame, self.value_inside, *options_list)
         brush_size_scale.pack(side=tk.LEFT)
 
+    def pick_color(self, event):
+        """
+
+        :param event:
+        :return:
+        """
+        x = event.x
+        y = event.y
+        self.pen_color = self.image.getpixel((x, y))
+        r, g, b = self.image.getpixel((x, y))
+        self.pen_color = f"#{r:02x}{g:02x}{b:02x}"
+        print(f"Выбрано цвет: {self.pen_color}")
+        return self.pen_color
+
     def paint(self, event):
+        # self.pen_color = self.pick_color
         if self.last_x and self.last_y:
             self.canvas.create_line(self.last_x, self.last_y, event.x, event.y,
                                     width=int(self.value_inside.get()), fill=self.pen_color or
-                                    LIST_ACTIVATION_CONTROL[-1], # Если self.pen_color будет None то цвет будет
+                                    LIST_ACTIVATION_CONTROL[-1], # Если self.pen_color будет None, то цвет будет
                                     # последним элементом списка
                                     capstyle=tk.ROUND, smooth=tk.TRUE)
             self.draw.line([self.last_x, self.last_y, event.x, event.y], fill=self.pen_color or
-                           LIST_ACTIVATION_CONTROL[-1],  # Если self.pen_color будет None то цвет будет
+                                    LIST_ACTIVATION_CONTROL[-1],  # Если self.pen_color будет None, то цвет будет
                                     # последним элементом списка
-                           width=int(self.value_inside.get()))   # Необходимо было поставить int(
+                                    width=int(self.value_inside.get()))   # Необходимо было поставить int(
 
         self.last_x = event.x
         self.last_y = event.y
@@ -81,8 +95,9 @@ class DrawingApp:
         self.image = Image.new("RGB", (600, 400), "white")
         self.draw = ImageDraw.Draw(self.image)
 
-    # def pick_color(self):
-    #     self.image.getpixel((x, self.pen_color))
+
+
+
     def choose_color(self):
         """
         В методе используем ACTIVATION_CONTROL как счетчик кликов на кнопку 'Ластик', а LIST_ACTIVATION_CONTROL
@@ -128,6 +143,7 @@ class DrawingApp:
             except:
                 self.pen_color = 'black'
         ACTIVATION_CONTROL += 1
+        print(LIST_ACTIVATION_CONTROL[-1])
 
 
     def save_image(self):
