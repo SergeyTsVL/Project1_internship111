@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw
 
 
 ACTIVATION_CONTROL = 0
-LIST_ACTIVATION_CONTROL=[]
+LIST_ACTIVATION_CONTROL = []
 
 class DrawingApp:
     def __init__(self, root):
@@ -79,11 +79,14 @@ class DrawingApp:
         self.draw = ImageDraw.Draw(self.image)
 
     def choose_color(self):
+        """
+        В методе используем ACTIVATION_CONTROL как счетчик кликов на кнопку 'Ластик', а LIST_ACTIVATION_CONTROL
+        используем как накопитель данных для запоминания какой цвет был последним
+        """
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
         # Корректируем счетчик таким
         global ACTIVATION_CONTROL
         if self.pen_color != None:
-            print("!= None")
             LIST_ACTIVATION_CONTROL.append(self.pen_color)
             ACTIVATION_CONTROL += 1
         else:
@@ -91,6 +94,15 @@ class DrawingApp:
 
 
     def choose_color_eraser(self):   # рализация работы ластика через список, при этом чтобы список постоянно сокращаем
+        """
+        В методе используем ACTIVATION_CONTROL как счетчик кликов на кнопку 'Ластик', а LIST_ACTIVATION_CONTROL
+        используем как накопитель данных для запоминания какой цвет был последним.
+        Конструкция if self.pen_color != None: определяет что если при переходе в меню выбора цвета, не произошел выбор
+        цвета то мы сохраняем в LIST_ACTIVATION_CONTROL последний выбранный цвет self.pen_color, иначе в список будет
+        внесен None и придется перевыбирать цвет.
+        При нажатии кнопки 'Ластик' происхоит смена цвета на "white", либо смена "white" на последний использованный
+        цвет маркера.
+        """
         global ACTIVATION_CONTROL
         # Реализация акивности и неактивности действия ластика, каждое четное нажатие включает ластик, нечетное - отключ
         if ACTIVATION_CONTROL % 2 == 0:
@@ -101,7 +113,10 @@ class DrawingApp:
                         LIST_ACTIVATION_CONTROL.append(self.pen_color)
                 except:
                     self.pen_color = "white"
+            else:
+                None
             self.pen_color = "white"
+
         else:
             try:
                 self.pen_color = LIST_ACTIVATION_CONTROL[-1]
@@ -115,8 +130,12 @@ class DrawingApp:
         if file_path:
             if not file_path.endswith('.png'):
                 file_path += '.png'
+            else:
+                None
             self.image.save(file_path)
             messagebox.showinfo("Информация", "Изображение успешно сохранено!")
+        else:
+            None
 
 
 def main():
