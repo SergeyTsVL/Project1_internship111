@@ -59,6 +59,10 @@ class DrawingApp:
         brush_size_scale = tk.OptionMenu(control_frame, self.value_inside, *options_list)
         brush_size_scale.pack(side=tk.LEFT)
 
+        # self.root.bind('<Control-s>', self.save_image)
+        # self.root.bind('<Control-c>', self.choose_color)
+
+
     def pick_color(self, event):
         """
         Функция определяет цвет в месте указания курсора и принимает этот цвет для дальнейшей отрисовке, при этом цвет
@@ -98,10 +102,11 @@ class DrawingApp:
         self.draw = ImageDraw.Draw(self.image)
 
 
-    def choose_color(self):
+    def choose_color(self, event=None):
         """
         В методе используем ACTIVATION_CONTROL как счетчик кликов на кнопку 'Ластик', а LIST_ACTIVATION_CONTROL
-        используем как накопитель данных для запоминания какой цвет был последним
+        используем как накопитель данных для запоминания какой цвет был последним. Добавили , event=None иначе функция
+        будет выдавать ошибку
         """
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
         # Корректируем счетчик таким
@@ -145,7 +150,10 @@ class DrawingApp:
         ACTIVATION_CONTROL += 1
 
 
-    def save_image(self):
+    def save_image(self, event=None):
+        """
+        Добавили , event=None иначе функция будет выдавать ошибку
+        """
         file_path = filedialog.asksaveasfilename(filetypes=[('PNG files', '*.png')])
         if file_path:
             if not file_path.endswith('.png'):
@@ -162,6 +170,7 @@ def main():
     root = tk.Tk()
     app = DrawingApp(root)
     root.mainloop()
+
 
 
 if __name__ == "__main__":
