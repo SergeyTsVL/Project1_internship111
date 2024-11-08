@@ -20,8 +20,6 @@ class DrawingApp:
         self.canvas = tk.Canvas(root, width=600, height=400, bg='white')
         self.canvas.pack()
 
-
-
         self.setup_ui()
 
         self.last_x, self.last_y = None, None
@@ -35,14 +33,13 @@ class DrawingApp:
         self.root.bind('<Control-c>', self.choose_color)
 
 
-
     def setup_ui(self):
 
         control_frame = tk.Frame(self.root)
         control_frame.pack(fill=tk.X)
 
-        # frame3 = tk.Frame(self.root, width=25, height=25, bg=self.pen_color)
-        # frame3.pack(side=tk.BOTTOM)
+        frame3 = tk.Frame(self.root, width=25, height=25, bg=self.pen_color)
+        frame3.pack(side=tk.BOTTOM)
 
         clear_button = tk.Button(control_frame, text="Очистить", command=self.clear_canvas)
         clear_button.pack(side=tk.LEFT)
@@ -127,12 +124,11 @@ class DrawingApp:
             ACTIVATION_CONTROL += 1
         else:
             None
-        if self.pen_color == 'black':
-            self.canvas = tk.Canvas(self.root, height=20, bg='black')
-            self.canvas.pack()
-        else:
-            self.canvas = tk.Canvas(self.root, height=20, bg=self.pen_color)
-            self.canvas.pack()
+        self.canvas1 = tk.Canvas(self.root, height=20, bg=self.pen_color)
+        self.canvas1.pack()
+        if self.canvas1:
+            del self.canvas1
+
 
     def choose_color_eraser(self):   # рализация работы ластика через список, при этом чтобы список постоянно сокращаем
         """
