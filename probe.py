@@ -1,57 +1,54 @@
-import tkinter as tk
-from tkinter import filedialog, colorchooser, messagebox
+# import tkinter as tk
+#
+# border_effects = {
+#     "flat": tk.FLAT,
+#     "sunken": tk.SUNKEN,
+#     "raised": tk.RAISED,
+#     "groove": tk.GROOVE,
+#     "ridge": tk.RIDGE,
+# }
+#
+# window = tk.Tk()
+#
+# for relief_name, relief in border_effects.items():
+#     frame = tk.Frame(master=window, relief=relief, borderwidth=5)
+#     frame.pack(side=tk.LEFT)
+#     label = tk.Label(master=frame, text=relief_name)
+#     label.pack()
+#
+# window.mainloop()
 
-class ImageEditor(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("Редактор изображений")
-        self.geometry("400x300")
+# import tkinter as tk
+#
+# window = tk.Tk()
+#
+# frame1 = tk.Frame(master=window, width=100, height=100, bg="red")
+# frame1.pack()
+#
+# frame2 = tk.Frame(master=window, width=50, height=50, bg="yellow")
+# frame2.pack()
+#
+# frame3 = tk.Frame(master=window, width=25, height=25, bg="blue")
+# frame3.pack()
+#
+# window.mainloop()
 
-        self.image_label = None
+import tkinter
+from tkinter import *
+from tkinter import messagebox
 
-        self.open_button = tk.Button(self, text="Открыть изображение", command=self.open_image)
-        self.open_button.pack(pady=10)
+top = Tk()
+top.geometry("300x150")
+def click():
+    messagebox.showinfo("Hello", "Green Button clicked")
+a = Button(top, text="yellow", activeforeground="yellow", activebackground="orange", pady=10)
+b = Button(top, text="Blue", activeforeground="blue", activebackground="orange", pady=10)
+# adding click function to the below button
+c = Button(top, text="Green", command=click, activeforeground = "green", activebackground="orange", pady=10)
+d = Button(top, text="red", activeforeground="yellow", activebackground="orange", pady=10)
 
-        self.save_button = tk.Button(self, text="Сохранить изображение", command=self.save_image)
-        self.save_button.pack()
-
-        self.color_button = tk.Button(self, text="Изменить цвет", command=self.change_color)
-        self.color_button.pack()
-
-        # Биндинг события Ctrl+S
-        self.bind('<Control-s>', self.save_image)
-
-    def open_image(self):
-        filename = filedialog.askopenfilename(filetypes=[("Image Files", ".png .jpg .jpeg")])
-        if filename:
-            self.image_label = tk.PhotoImage(file=filename)
-            label = tk.Label(self, image=self.image_label)
-            label.image = self.image_label
-            label.pack()
-
-    def save_image(self, event=None):
-        if self.image_label:
-            filename = filedialog.asksaveasfilename(defaultextension=".png",
-                                                    filetypes=[("PNG Image", "*.png"), ("JPEG Image", "*.jpg *.jpeg")])
-            if filename:
-                try:
-                    self.image_label.save(filename)
-                    messagebox.showinfo("Success", "Изображение успешно сохранено!")
-                except Exception as e:
-                    messagebox.showerror("Error", f"Не удалось сохранить изображение: {str(e)}")
-        else:
-            messagebox.showwarning("Warning", "Пожалуйста, открыть изображение перед его сохранением.")
-
-    def change_color(self):
-        color = colorchooser.askcolor()
-        if color[1]:  # Проверяем, был ли выбран цвет
-            self.image_label = tk.PhotoImage(file="path_to_your_image.png").convert_alpha()
-            self.image_label.putalpha(color[2])  # Задаем прозрачность
-            self.image_label.save("temp.png")
-            self.image_label = tk.PhotoImage(file="temp.png")
-            self.image_label.save("final.png")
-            messagebox.showinfo("Success", "Цвет изображения изменен!")
-
-if __name__ == "__main__":
-    app = ImageEditor()
-    app.mainloop()
+a.pack(side = LEFT)
+b.pack(side = RIGHT)
+c.pack(side = TOP)
+d.pack(side = BOTTOM)
+top.mainloop()

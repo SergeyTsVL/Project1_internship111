@@ -9,6 +9,7 @@ ACTIVATION_CONTROL = 0
 LIST_ACTIVATION_CONTROL = []
 
 class DrawingApp:
+
     def __init__(self, root):
         self.root = root
         self.root.title("Рисовалка с сохранением в PNG")
@@ -18,6 +19,8 @@ class DrawingApp:
 
         self.canvas = tk.Canvas(root, width=600, height=400, bg='white')
         self.canvas.pack()
+
+
 
         self.setup_ui()
 
@@ -32,10 +35,14 @@ class DrawingApp:
         self.root.bind('<Control-c>', self.choose_color)
 
 
+
     def setup_ui(self):
 
         control_frame = tk.Frame(self.root)
         control_frame.pack(fill=tk.X)
+
+        # frame3 = tk.Frame(self.root, width=25, height=25, bg=self.pen_color)
+        # frame3.pack(side=tk.BOTTOM)
 
         clear_button = tk.Button(control_frame, text="Очистить", command=self.clear_canvas)
         clear_button.pack(side=tk.LEFT)
@@ -43,11 +50,14 @@ class DrawingApp:
         color_button = tk.Button(control_frame, text="Выбрать цвет", command=self.choose_color)
         color_button.pack(side=tk.LEFT)
 
-        save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)
+        save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)    # , bg='black' higlightcolor
         save_button.pack(side=tk.LEFT)
 
         eraser_button = tk.Button(control_frame, text="Ластик", command=self.choose_color_eraser)
         eraser_button.pack(side=tk.LEFT)
+
+
+
 
         # Создание списка значений толщины
         options_list = [x for x in range(1, 21)]
@@ -58,9 +68,6 @@ class DrawingApp:
         # Создание виджета OptionMenu и передача ему созданного списка опций и переменной
         brush_size_scale = tk.OptionMenu(control_frame, self.value_inside, *options_list)
         brush_size_scale.pack(side=tk.LEFT)
-
-        # self.root.bind('<Control-s>', self.save_image)
-        # self.root.bind('<Control-c>', self.choose_color)
 
 
     def pick_color(self, event):
@@ -93,6 +100,7 @@ class DrawingApp:
         self.last_x = event.x
         self.last_y = event.y
 
+
     def reset(self, event):
         self.last_x, self.last_y = None, None
 
@@ -108,7 +116,10 @@ class DrawingApp:
         используем как накопитель данных для запоминания какой цвет был последним. Добавили , event=None иначе функция
         будет выдавать ошибку
         """
+
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
+
+
         # Корректируем счетчик таким
         global ACTIVATION_CONTROL
         if self.pen_color != None:
@@ -116,7 +127,12 @@ class DrawingApp:
             ACTIVATION_CONTROL += 1
         else:
             None
-
+        if self.pen_color == 'black':
+            self.canvas = tk.Canvas(self.root, height=20, bg='black')
+            self.canvas.pack()
+        else:
+            self.canvas = tk.Canvas(self.root, height=20, bg=self.pen_color)
+            self.canvas.pack()
 
     def choose_color_eraser(self):   # рализация работы ластика через список, при этом чтобы список постоянно сокращаем
         """
