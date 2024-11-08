@@ -25,6 +25,9 @@ class DrawingApp:
         self.last_x, self.last_y = None, None
         self.pen_color = 'black'
 
+        self.color_label = tk.Label(root, text=f"Текущий цвет: {self.pen_color}", fg=self.pen_color)
+        self.color_label.pack(side=tk.LEFT)
+
         self.canvas.bind('<B1-Motion>', self.paint)
         self.canvas.bind('<ButtonRelease-1>', self.reset)
 
@@ -38,9 +41,6 @@ class DrawingApp:
         control_frame = tk.Frame(self.root)
         control_frame.pack(fill=tk.X)
 
-        frame3 = tk.Frame(self.root, width=25, height=25, bg=self.pen_color)
-        frame3.pack(side=tk.BOTTOM)
-
         clear_button = tk.Button(control_frame, text="Очистить", command=self.clear_canvas)
         clear_button.pack(side=tk.LEFT)
 
@@ -52,9 +52,6 @@ class DrawingApp:
 
         eraser_button = tk.Button(control_frame, text="Ластик", command=self.choose_color_eraser)
         eraser_button.pack(side=tk.LEFT)
-
-
-
 
         # Создание списка значений толщины
         options_list = [x for x in range(1, 21)]
@@ -110,13 +107,10 @@ class DrawingApp:
     def choose_color(self, event=None):
         """
         В методе используем ACTIVATION_CONTROL как счетчик кликов на кнопку 'Ластик', а LIST_ACTIVATION_CONTROL
-        используем как накопитель данных для запоминания какой цвет был последним. Добавили , event=None иначе функция
+        используем как накопитель данных для запоминания какой цвет был последним. Добавили, event=None иначе функция
         будет выдавать ошибку
         """
-
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
-
-
         # Корректируем счетчик таким
         global ACTIVATION_CONTROL
         if self.pen_color != None:
@@ -124,10 +118,7 @@ class DrawingApp:
             ACTIVATION_CONTROL += 1
         else:
             None
-        self.canvas1 = tk.Canvas(self.root, height=20, bg=self.pen_color)
-        self.canvas1.pack()
-        if self.canvas1:
-            del self.canvas1
+        self.color_label.config(text=f"Текущий цвет: {self.pen_color}", bg=self.pen_color or 'black', height=1)
 
 
     def choose_color_eraser(self):   # рализация работы ластика через список, при этом чтобы список постоянно сокращаем
