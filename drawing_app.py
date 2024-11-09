@@ -2,7 +2,6 @@
 import tkinter as tk
 from tkinter import colorchooser, filedialog, messagebox
 from PIL import Image, ImageDraw
-# from tkinter import *
 
 
 ACTIVATION_CONTROL = 0
@@ -13,11 +12,13 @@ class DrawingApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Рисовалка с сохранением в PNG")
+        self.width = 600
+        self.height = 400
 
-        self.image = Image.new("RGB", (600, 400), "white")
+        self.image = Image.new("RGB", (self.width, self.height), "white")
         self.draw = ImageDraw.Draw(self.image)
 
-        self.canvas = tk.Canvas(root, width=600, height=400, bg='white')
+        self.canvas = tk.Canvas(root, width=self.width, height=self.height, bg='white')
         self.canvas.pack()
 
         self.setup_ui()
@@ -62,6 +63,35 @@ class DrawingApp:
         # Создание виджета OptionMenu и передача ему созданного списка опций и переменной
         brush_size_scale = tk.OptionMenu(control_frame, self.value_inside, *options_list)
         brush_size_scale.pack(side=tk.LEFT)
+
+        button = tk.Button(self.root, text="Размер окна", command=self.run)
+        button.pack(side=tk.LEFT)
+
+
+    def ok(self):
+        try:
+            self.values = [int(self.entry1.get()), int(self.entry2.get())]
+            self.top.destroy()
+            self.width = self.values[0] or 600
+            self.height = self.values[1] or 400
+            self.canvas.config(width=self.width, height=self.height)
+        except:
+            self.width = 600
+            self.height = 400
+            self.canvas.config(width=self.width, height=self.height)
+
+    def run(self):
+        self.top = tk.Toplevel(self.root)
+        self.top.title("Выбор размеров окна")
+        tk.Label(self.top, text="Высота окна:").grid(row=0, column=0)
+        tk.Label(self.top, text="Ширина окна:").grid(row=1, column=0)
+        self.entry1 = tk.Entry(self.top)
+        self.entry2 = tk.Entry(self.top)
+        self.entry1.grid(row=0, column=1)
+        self.entry2.grid(row=1, column=1)
+        tk.Button(self.top, text="OK", command=self.ok).grid(row=2, column=0, columnspan=2)
+        self.top.wait_window()
+        return self.values
 
 
     def pick_color(self, event):
