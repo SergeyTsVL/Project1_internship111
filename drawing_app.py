@@ -54,6 +54,9 @@ class DrawingApp:
         eraser_button = tk.Button(control_frame, text="Ластик", command=self.choose_color_eraser)
         eraser_button.pack(side=tk.LEFT)
 
+        button = tk.Button(control_frame, text="Размер окна", command=self.run)
+        button.pack(side=tk.LEFT)
+
         # Создание списка значений толщины
         options_list = [x for x in range(1, 21)]
         # Переменная для отслеживания выбранного варианта в OptionMenu
@@ -64,8 +67,7 @@ class DrawingApp:
         brush_size_scale = tk.OptionMenu(control_frame, self.value_inside, *options_list)
         brush_size_scale.pack(side=tk.LEFT)
 
-        button = tk.Button(self.root, text="Размер окна", command=self.run)
-        button.pack(side=tk.LEFT)
+
 
 
     def ok(self):
