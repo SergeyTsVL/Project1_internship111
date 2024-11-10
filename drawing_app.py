@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
 from tkinter import colorchooser, filedialog, messagebox
-# from tkinter import *
 
 from PIL import Image, ImageDraw
 
 
-ACTIVATION_CONTROL = True
+ACTIVATION_CONTROL_ERASER = True   # Используется для включения и выключения кнопки "Ластика"
 LIST_ACTIVATION_CONTROL = ['black']
-ACTIVATION_CONTROL_TEXT = True
+ACTIVATION_CONTROL_TEXT = True  # Используется для включения и выключения кнопки "Написать"
+
 class DrawingApp:
 
     def __init__(self, root):
@@ -50,7 +50,7 @@ class DrawingApp:
         color_button = tk.Button(control_frame, text="Выбрать цвет", command=self.choose_color)
         color_button.pack(side=tk.LEFT)
 
-        save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)    # , bg='black' higlightcolor
+        save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)
         save_button.pack(side=tk.LEFT)
 
         eraser_button = tk.Button(control_frame, text="Ластик", command=self.choose_color_eraser)
@@ -61,36 +61,27 @@ class DrawingApp:
 
         button = tk.Button(control_frame, text="Написать", command=self.position_text)
         button.pack(side=tk.LEFT)
-        # self.root.bind('<Motion>', self.position_text)
 
-        # undo_button = tk.Button(control_frame, text="Undo", command=undo)
-        # undo_button.pack(side=tk.LEFT)
-
-        # Создание списка значений толщины
-        options_list = [x for x in range(1, 21)]
-        # Переменная для отслеживания выбранного варианта в OptionMenu
-        self.value_inside = tk.StringVar()
-        # Установка значения по умолчанию для переменной
-        self.value_inside.set(options_list[0])
+        options_list = [x for x in range(1, 21)]     # Создание списка значений толщины
+        self.value_inside = tk.StringVar()    # Переменная для отслеживания выбранного варианта в OptionMenu
+        self.value_inside.set(options_list[0])   # Установка значения по умолчанию для переменной
         # Создание виджета OptionMenu и передача ему созданного списка опций и переменной
         brush_size_scale = tk.OptionMenu(control_frame, self.value_inside, *options_list)
         brush_size_scale.pack(side=tk.LEFT)
 
 
-
-    def position_text(self):
+    def position_text(self):  # Метод для определения положения где будет находиться текст
         global a
         a = True
         self.canvas.bind('<Button-1>', self.writing_text1)
 
 
-    def writing_text1(self, event=None):
+    def writing_text1(self, event=None): # Метод для вывода окна в котором запишим текст
         global a
         if a == True:
             if event is not None:
                 x, y = event.x, event.y
                 self.x, self.y = x, y
-                print('{}, {}'.format(x, y))
                 top = tk.Toplevel(self.root)
                 top.title("")
                 tk.Label(top, text="Введите текст:").grid(row=0, column=0)
@@ -99,16 +90,14 @@ class DrawingApp:
                 tk.Button(top, text="OK", command=self.writing_text2).grid(row=1, column=0, columnspan=2)
 
 
-    def writing_text2(self):
-        print(self.entry.get())
+    def writing_text2(self):  # Метод для пероноса текста из окна в котором его записали на холст
         self.canvas.create_text(self.x, self.y, text=self.entry.get(), fill="black", font=("Helvetica 15 bold"))
         self.canvas.pack()
         global a
         a = False
 
 
-
-    def ok(self):
+    def ok(self):   # В этом методе задаем ширину и высоту холста, если не задаем то ставятся значения по умолчанию
         try:
             self.values = [int(self.entry1.get()), int(self.entry2.get())]
             self.top.destroy()
@@ -120,7 +109,8 @@ class DrawingApp:
             self.height = 400
             self.canvas.config(width=self.width, height=self.height)
 
-    def run(self):
+
+    def run(self):   # Метод для вывода окна с двумя заполняемыми строками для ввода высоты и ширины холста
         self.top = tk.Toplevel(self.root)
         self.top.title("Выбор размеров окна")
         tk.Label(self.top, text="Высота окна:").grid(row=0, column=0)
@@ -146,8 +136,8 @@ class DrawingApp:
         self.pen_color = self.image.getpixel((x, y))
         r, g, b = self.image.getpixel((x, y))
         self.pen_color = f"#{r:02x}{g:02x}{b:02x}"
-        print(f"Выбрано цвет: {self.pen_color}")
         return self.pen_color
+
 
     def paint(self, event):
         if self.last_x and self.last_y:
@@ -164,8 +154,10 @@ class DrawingApp:
         self.last_y = event.y
 
 
+
     def reset(self, event):
         self.last_x, self.last_y = None, None
+
 
     def clear_canvas(self):
         self.canvas.delete("all")
@@ -181,10 +173,10 @@ class DrawingApp:
         """
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
         # Корректируем счетчик таким
-        global ACTIVATION_CONTROL
+        global ACTIVATION_CONTROL_ERASER
         if self.pen_color != None:
             LIST_ACTIVATION_CONTROL.append(self.pen_color)
-            ACTIVATION_CONTROL = True
+            ACTIVATION_CONTROL_ERASER = True
             try:
                 if LIST_ACTIVATION_CONTROL[-1] != self.pen_color:
                     LIST_ACTIVATION_CONTROL.append(self.pen_color)
@@ -205,9 +197,9 @@ class DrawingApp:
         При нажатии кнопки 'Ластик' происходит смена цвета на "white", либо смена "white" на последний использованный
         цвет маркера.
         """
-        global ACTIVATION_CONTROL
+        global ACTIVATION_CONTROL_ERASER
         # Реализация акивности и неактивности действия ластика, каждое четное нажатие включает ластик, нечетное - отключ
-        if ACTIVATION_CONTROL == True:
+        if ACTIVATION_CONTROL_ERASER == True:
             # Ластик включается переводом self.pen_color на белый цвет
             if self.pen_color != None:
                 try:
@@ -224,7 +216,7 @@ class DrawingApp:
             except:
                 print("Выберите цвет")
                 self.pen_color = 'black'
-        ACTIVATION_CONTROL = False
+        ACTIVATION_CONTROL_ERASER = False
 
 
     def save_image(self, event=None):
@@ -247,8 +239,6 @@ def main():
     root = tk.Tk()
     app = DrawingApp(root)
     root.mainloop()
-
-
 
 
 if __name__ == "__main__":
