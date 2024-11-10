@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
 from tkinter import colorchooser, filedialog, messagebox
+# from tkinter import *
+
 from PIL import Image, ImageDraw
 
 
-ACTIVATION_CONTROL = 0
-LIST_ACTIVATION_CONTROL = []
-
+ACTIVATION_CONTROL = True
+LIST_ACTIVATION_CONTROL = ['black']
+ACTIVATION_CONTROL_TEXT = True
 class DrawingApp:
 
     def __init__(self, root):
@@ -57,6 +59,13 @@ class DrawingApp:
         button = tk.Button(control_frame, text="Размер окна", command=self.run)
         button.pack(side=tk.LEFT)
 
+        button = tk.Button(control_frame, text="Написать", command=self.position_text)
+        button.pack(side=tk.LEFT)
+        # self.root.bind('<Motion>', self.position_text)
+
+        # undo_button = tk.Button(control_frame, text="Undo", command=undo)
+        # undo_button.pack(side=tk.LEFT)
+
         # Создание списка значений толщины
         options_list = [x for x in range(1, 21)]
         # Переменная для отслеживания выбранного варианта в OptionMenu
@@ -67,6 +76,35 @@ class DrawingApp:
         brush_size_scale = tk.OptionMenu(control_frame, self.value_inside, *options_list)
         brush_size_scale.pack(side=tk.LEFT)
 
+
+
+    def position_text(self):
+        global a
+        a = True
+        self.canvas.bind('<Button-1>', self.writing_text1)
+
+
+    def writing_text1(self, event=None):
+        global a
+        if a == True:
+            if event is not None:
+                x, y = event.x, event.y
+                self.x, self.y = x, y
+                print('{}, {}'.format(x, y))
+                top = tk.Toplevel(self.root)
+                top.title("")
+                tk.Label(top, text="Введите текст:").grid(row=0, column=0)
+                self.entry = tk.Entry(top)
+                self.entry.grid(row=0, column=1)
+                tk.Button(top, text="OK", command=self.writing_text2).grid(row=1, column=0, columnspan=2)
+
+
+    def writing_text2(self):
+        print(self.entry.get())
+        self.canvas.create_text(self.x, self.y, text=self.entry.get(), fill="black", font=("Helvetica 15 bold"))
+        self.canvas.pack()
+        global a
+        a = False
 
 
 
@@ -98,7 +136,7 @@ class DrawingApp:
 
     def pick_color(self, event):
         """
-        Функция определяет цвет в месте указания курсора и принимает этот цвет для дальнейшей отрисовке, при этом цвет
+        Функция определяет цвет в месте указания курсора и принимает этот цвет для дальнейшей отрисовки, при этом цвет
         формата RGB переводится в шестнадцатеричный код цвета.
         :param event:
         :return:
@@ -112,7 +150,6 @@ class DrawingApp:
         return self.pen_color
 
     def paint(self, event):
-        # self.pen_color = self.pick_color
         if self.last_x and self.last_y:
             self.canvas.create_line(self.last_x, self.last_y, event.x, event.y,
                                     width=int(self.value_inside.get()), fill=self.pen_color or
@@ -147,7 +184,12 @@ class DrawingApp:
         global ACTIVATION_CONTROL
         if self.pen_color != None:
             LIST_ACTIVATION_CONTROL.append(self.pen_color)
-            ACTIVATION_CONTROL += 1
+            ACTIVATION_CONTROL = True
+            try:
+                if LIST_ACTIVATION_CONTROL[-1] != self.pen_color:
+                    LIST_ACTIVATION_CONTROL.append(self.pen_color)
+            except:
+                self.pen_color = "white"
         else:
             None
         self.color_label.config(text=f"Текущий цвет: {self.pen_color}", bg=self.pen_color or 'black', height=1)
@@ -160,12 +202,12 @@ class DrawingApp:
         Конструкция if self.pen_color != None: определяет, что если при переходе в меню выбора цвета, не произошел выбор
         цвета то мы сохраняем в LIST_ACTIVATION_CONTROL последний выбранный цвет self.pen_color, иначе в список будет
         внесен None и придется перевыбирать цвет.
-        При нажатии кнопки 'Ластик' происхоит смена цвета на "white", либо смена "white" на последний использованный
+        При нажатии кнопки 'Ластик' происходит смена цвета на "white", либо смена "white" на последний использованный
         цвет маркера.
         """
         global ACTIVATION_CONTROL
         # Реализация акивности и неактивности действия ластика, каждое четное нажатие включает ластик, нечетное - отключ
-        if ACTIVATION_CONTROL % 2 == 0:
+        if ACTIVATION_CONTROL == True:
             # Ластик включается переводом self.pen_color на белый цвет
             if self.pen_color != None:
                 try:
@@ -176,18 +218,18 @@ class DrawingApp:
             else:
                 None
             self.pen_color = "white"
-
         else:
             try:
                 self.pen_color = LIST_ACTIVATION_CONTROL[-1]
             except:
+                print("Выберите цвет")
                 self.pen_color = 'black'
-        ACTIVATION_CONTROL += 1
+        ACTIVATION_CONTROL = False
 
 
     def save_image(self, event=None):
         """
-        Добавили , event=None иначе функция будет выдавать ошибку
+        Добавили, event=None иначе функция будет выдавать ошибку
         """
         file_path = filedialog.asksaveasfilename(filetypes=[('PNG files', '*.png')])
         if file_path:
@@ -205,6 +247,7 @@ def main():
     root = tk.Tk()
     app = DrawingApp(root)
     root.mainloop()
+
 
 
 
