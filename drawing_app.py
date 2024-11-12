@@ -2,12 +2,12 @@
 import tkinter as tk
 from tkinter import colorchooser, filedialog, messagebox
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageTk
 
-
-ACTIVATION_CONTROL_ERASER = True   # Используется для включения и выключения кнопки "Ластика"
+ACTIVATION_CONTROL_ERASER = True  # Используется для включения и выключения кнопки "Ластика"
 LIST_ACTIVATION_CONTROL = ['black']
 ACTIVATION_CONTROL_TEXT = True  # Используется для включения и выключения кнопки "Написать"
+
 
 class DrawingApp:
 
@@ -38,9 +38,7 @@ class DrawingApp:
         self.root.bind('<Control-s>', self.save_image)
         self.root.bind('<Control-c>', self.choose_color)
 
-
     def setup_ui(self):
-
         control_frame = tk.Frame(self.root)
         control_frame.pack(fill=tk.X)
 
@@ -59,24 +57,29 @@ class DrawingApp:
         button = tk.Button(control_frame, text="Размер окна", command=self.run)
         button.pack(side=tk.LEFT)
 
-        button = tk.Button(control_frame, text="Написать", command=self.position_text)
+        button = tk.Button(control_frame, text="Текст", command=self.position_text)
         button.pack(side=tk.LEFT)
 
-        options_list = [x for x in range(1, 21)]     # Создание списка значений толщины
-        self.value_inside = tk.StringVar()    # Переменная для отслеживания выбранного варианта в OptionMenu
-        self.value_inside.set(options_list[0])   # Установка значения по умолчанию для переменной
+        button = tk.Button(control_frame, text="Изменить фон", command=self.сhange_background)
+        button.pack(side=tk.LEFT)
+
+        options_list = [x for x in range(1, 11)] + [15, 20, 25, 30, 40, 50]  # Создание списка значений толщины
+        self.value_inside = tk.StringVar()  # Переменная для отслеживания выбранного варианта в OptionMenu
+        self.value_inside.set(options_list[0])  # Установка значения по умолчанию для переменной
         # Создание виджета OptionMenu и передача ему созданного списка опций и переменной
         brush_size_scale = tk.OptionMenu(control_frame, self.value_inside, *options_list)
         brush_size_scale.pack(side=tk.LEFT)
 
+    def сhange_background(self):
+        new_color = colorchooser.askcolor()
+        self.canvas.config(background=new_color[1])
 
     def position_text(self):  # Метод для определения положения где будет находиться текст
         global a
         a = True
         self.canvas.bind('<Button-1>', self.writing_text1)
 
-
-    def writing_text1(self, event=None): # Метод для вывода окна в котором запишим текст
+    def writing_text1(self, event=None):  # Метод для вывода окна в котором запишим текст
         global a
         if a == True:
             if event is not None:
@@ -89,15 +92,22 @@ class DrawingApp:
                 self.entry.grid(row=0, column=1)
                 tk.Button(top, text="OK", command=self.writing_text2).grid(row=1, column=0, columnspan=2)
 
-
-    def writing_text2(self):  # Метод для пероноса текста из окна в котором его записали на холст
-        self.canvas.create_text(self.x, self.y, text=self.entry.get(), fill="black", font=("Helvetica 15 bold"))
-        self.canvas.pack()
+    def writing_text2(self, event=None):  # Метод для пероноса текста из окна в котором его записали на холст
+        # self.canvas.create_text(self.x, self.y, text=self.entry.get(), fill="black", font=("Helvetica 15 bold"))
+        # self.canvas.pack()
         global a
+        if a == True:
+            self.draw.text((self.x, self.y), text=str(self.entry.get()), fill=self.pen_color, encodings='utf8')
+            print(self.entry.get())
+            self.update_drawing_area()
         a = False
 
+    def update_drawing_area(self):
+        self.photo = ImageTk.PhotoImage(self.image)
+        self.canvas.delete(tk.ALL)
+        self.canvas.create_image(0, 0, image=self.photo, anchor=tk.NW)
 
-    def ok(self):   # В этом методе задаем ширину и высоту холста, если не задаем то ставятся значения по умолчанию
+    def ok(self):  # В этом методе задаем ширину и высоту холста, если не задаем то ставятся значения по умолчанию
         try:
             self.values = [int(self.entry1.get()), int(self.entry2.get())]
             self.top.destroy()
@@ -109,8 +119,7 @@ class DrawingApp:
             self.height = 400
             self.canvas.config(width=self.width, height=self.height)
 
-
-    def run(self):   # Метод для вывода окна с двумя заполняемыми строками для ввода высоты и ширины холста
+    def run(self):  # Метод для вывода окна с двумя заполняемыми строками для ввода высоты и ширины холста
         self.top = tk.Toplevel(self.root)
         self.top.title("Выбор размеров окна")
         tk.Label(self.top, text="Высота окна:").grid(row=0, column=0)
@@ -122,7 +131,6 @@ class DrawingApp:
         tk.Button(self.top, text="OK", command=self.ok).grid(row=2, column=0, columnspan=2)
         self.top.wait_window()
         return self.values
-
 
     def pick_color(self, event):
         """
@@ -138,32 +146,29 @@ class DrawingApp:
         self.pen_color = f"#{r:02x}{g:02x}{b:02x}"
         return self.pen_color
 
-
     def paint(self, event):
         if self.last_x and self.last_y:
             self.canvas.create_line(self.last_x, self.last_y, event.x, event.y,
                                     width=int(self.value_inside.get()), fill=self.pen_color or
-                                    LIST_ACTIVATION_CONTROL[-1], # Если self.pen_color будет None, то цвет будет
+                                                                             LIST_ACTIVATION_CONTROL[-1],
+                                    # Если self.pen_color будет None, то цвет будет
                                     # последним элементом списка
                                     capstyle=tk.ROUND, smooth=tk.TRUE)
             self.draw.line([self.last_x, self.last_y, event.x, event.y], fill=self.pen_color or
-                                    LIST_ACTIVATION_CONTROL[-1],  # Если self.pen_color будет None, то цвет будет
-                                    # последним элементом списка
-                                    width=int(self.value_inside.get()))   # Необходимо было поставить int(
+                                                                              LIST_ACTIVATION_CONTROL[-1],
+                           # Если self.pen_color будет None, то цвет будет
+                           # последним элементом списка
+                           width=int(self.value_inside.get()))  # Необходимо было поставить int(
         self.last_x = event.x
         self.last_y = event.y
 
-
-
     def reset(self, event):
         self.last_x, self.last_y = None, None
-
 
     def clear_canvas(self):
         self.canvas.delete("all")
         self.image = Image.new("RGB", (600, 400), "white")
         self.draw = ImageDraw.Draw(self.image)
-
 
     def choose_color(self, event=None):
         """
@@ -186,8 +191,7 @@ class DrawingApp:
             None
         self.color_label.config(text=f"Текущий цвет: {self.pen_color}", bg=self.pen_color or 'black', height=1)
 
-
-    def choose_color_eraser(self):   # рализация работы ластика через список, при этом чтобы список постоянно сокращаем
+    def choose_color_eraser(self):  # рализация работы ластика через список, при этом чтобы список постоянно сокращаем
         """
         В методе используем ACTIVATION_CONTROL как счетчик кликов на кнопку 'Ластик', а LIST_ACTIVATION_CONTROL
         используем как накопитель данных для запоминания какой цвет был последним.
@@ -217,7 +221,6 @@ class DrawingApp:
                 print("Выберите цвет")
                 self.pen_color = 'black'
         ACTIVATION_CONTROL_ERASER = False
-
 
     def save_image(self, event=None):
         """
